@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener {
 
     private TextView mTextMessage;
     //private static final int NUM_PAGES = 4;
@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }
 class SwipePagerAdapter extends FragmentStatePagerAdapter implements HomeFragment.OnFragmentInteractionListener,VideoFragment.OnFragmentInteractionListener,DashboardFragment.OnFragmentInteractionListener,ProfileFragment.OnFragmentInteractionListener{
 
