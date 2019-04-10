@@ -11,12 +11,15 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,VideoFragment.OnFragmentInteractionListener,DashboardFragment.OnFragmentInteractionListener,ProfileFragment.OnFragmentInteractionListener{
 
     //private TextView mTextMessage;
     //private static final int NUM_PAGES = 4;
+    BottomNavigationView navigation;
     int position = 0;
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -61,8 +64,31 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         pagerAdapter = new SwipePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (i == 0)
+                    navigation.setSelectedItemId(R.id.navigation_home);
+                if (i == 1)
+                    navigation.setSelectedItemId(R.id.navigation_video);
+                if (i == 2)
+                    navigation.setSelectedItemId(R.id.navigation_dashboard);
+                if (i == 3)
+                    navigation.setSelectedItemId(R.id.navigation_Profile);
+                System.out.println(i);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
     public void onBackPressed() {
