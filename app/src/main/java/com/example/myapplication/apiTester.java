@@ -39,7 +39,7 @@ public class apiTester extends AppCompatActivity {
                 JSONObject json = new JSONObject(response);
                 tv.setText(json.toString());
             } catch (JSONException e) {
-                Toast.makeText(apiTester.this, "error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(apiTester.this, "error", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
 
