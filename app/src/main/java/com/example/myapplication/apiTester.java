@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,7 +21,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class apiTester extends AppCompatActivity {
+    Context context;
     TextView tv,ev;
+    String fact;
+    String url = "https://catfact.ninja/facts?limit=10&max_length=150";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,14 +37,16 @@ public class apiTester extends AppCompatActivity {
         ExampleRequestQueue.add(ExampleStringRequest);
     }
 
-    String url = "https://api.altmetric.com/v1/doi/10.1016/j.envres.2018.01.035";
     StringRequest ExampleStringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
             Toast.makeText(apiTester.this, "Success", Toast.LENGTH_LONG).show();
             try {
                 JSONObject json = new JSONObject(response);
-                tv.setText(json.toString());
+                JSONArray jarray = json.getJSONArray("data");
+                JSONObject object = jarray.getJSONObject(0);
+                fact = object.getString("fact");
+                tv.setText(fact);
             } catch (JSONException e) {
                 Toast.makeText(apiTester.this, "error", Toast.LENGTH_LONG).show();
                 e.printStackTrace();

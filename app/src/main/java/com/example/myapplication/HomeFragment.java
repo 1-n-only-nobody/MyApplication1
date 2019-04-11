@@ -10,6 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,6 +41,9 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    String url = "https://catfact.ninja/facts?limit=4&max_length=150";
+    String fact;
+    String[] facts;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -61,15 +80,51 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        //API
+        facts = new String[4];
+        RequestQueue ExampleRequestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        ExampleRequestQueue.add(ExampleStringRequest);
+        //API
     }
+    //API
+    StringRequest ExampleStringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            //Toast.makeText(context, "Success", Toast.LENGTH_LONG).show();
+            try {
+                JSONObject json = new JSONObject(response);
+                JSONArray jarray = json.getJSONArray("data");
+                JSONObject object;
+                for(int i = 0;i < 4;i++) {
+                    object = jarray.getJSONObject(i);
+                    fact = object.getString("fact");
+                    System.out.println("fact : " + fact);
+                    facts[i] = fact;
+                }
+            } catch (JSONException e) {
+                //Toast.makeText(context, "error", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+
+        }
+    }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            //Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
+        }
+    });
+    //API
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view1 = inflater.inflate(R.layout.fragment_home, container, false);
-        Context context = getActivity().getApplicationContext();
-        String[] names = {"Narendra Modi", "Rahul Gandhi", "Arvind Kejriwal", "Yogi Adityanath"};
+        final Context context = getActivity().getApplicationContext();
+        String[] names;
+        //System.out.println("facts size : " + facts.length);
+        names = facts;
+        System.out.println("facts size : " + names[0]);
         int[] photos = {R.drawable.img_266351, R.drawable.img_266351, R.drawable.img_266351, R.drawable.img_266351};
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(context, names, photos);
         RecyclerView recyclerView = (RecyclerView) view1.findViewById(R.id.view_recycle1);
