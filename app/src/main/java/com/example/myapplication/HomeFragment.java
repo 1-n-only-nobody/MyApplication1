@@ -4,9 +4,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 
 /**
@@ -64,7 +67,16 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view1 = inflater.inflate(R.layout.fragment_home, container, false);
+        Context context = getActivity().getApplicationContext();
+        String[] names = {"Narendra Modi", "Rahul Gandhi", "Arvind Kejriwal", "Yogi Adityanath"};
+        int[] photos = {R.drawable.img_266351, R.drawable.img_266351, R.drawable.img_266351, R.drawable.img_266351};
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(context, names, photos);
+        RecyclerView recyclerView = (RecyclerView) view1.findViewById(R.id.view_recycle1);
+        RecyclerView.LayoutManager mlm = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(mlm);
+        recyclerView.setAdapter(recyclerAdapter);
+        return view1;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
