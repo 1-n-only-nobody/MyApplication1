@@ -4,9 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
 
 
 /**
@@ -23,6 +28,10 @@ public class VideoFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private Toolbar toolbar;
+
+
+    ArrayList<SectionDataModel> allSampleData;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -64,7 +73,35 @@ public class VideoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_video, container, false);
+        View view2 = inflater.inflate(R.layout.fragment_video,container, false);
+        //toolbar = view2.findViewById(R.id.toolbar);
+        Context context = getActivity().getApplicationContext();
+        allSampleData = new ArrayList<SectionDataModel>();
+//        if (toolbar != null) {
+//            setSupportActionBar(toolbar);
+//            toolbar.setTitle("G PlayStore");
+//
+//        }
+        createDummyData();
+        RecyclerView my_recycler_view = view2.findViewById(R.id.nest_rec_view);
+        my_recycler_view.setHasFixedSize(true);
+        RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(context, allSampleData);
+        my_recycler_view.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        my_recycler_view.setAdapter(adapter);
+        return view2;
+    }
+
+    public void createDummyData() {
+        for (int i = 1; i <= 5; i++) {
+            SectionDataModel dm = new SectionDataModel();
+            dm.setHeaderTitle("Section " + i);
+            ArrayList<SingleItemModel> singleItem = new ArrayList<SingleItemModel>();
+            for (int j = 0; j <= 5; j++) {
+                singleItem.add(new SingleItemModel("Item " + j, "URL " + j));
+            }
+            dm.setAllItemsInSection(singleItem);
+            allSampleData.add(dm);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
