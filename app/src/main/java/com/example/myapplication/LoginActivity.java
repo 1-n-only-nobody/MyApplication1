@@ -84,8 +84,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        FirebaseApp.initializeApp(this);
-        fba =FirebaseAuth.getInstance();
+        FirebaseApp.initializeApp(LoginActivity.this);
+        fba = FirebaseAuth.getInstance();
         mPrefs = this.getSharedPreferences(MY_PREFERENCES,
                 Context.MODE_PRIVATE);
         // Set up the login form.
@@ -406,4 +406,3 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 }
-

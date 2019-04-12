@@ -36,6 +36,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +72,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private View mProgressView;
     private View mLoginFormView;
     FirebaseAuth fba;
+    DatabaseReference dbr;
     Intent intent;
 
     @Override
@@ -77,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         FirebaseApp.initializeApp(this);
+        dbr = FirebaseDatabase.getInstance().getReference("Names");
         fba = FirebaseAuth.getInstance();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.emailR);
@@ -94,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_buttonR);
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_up_buttonR);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,8 +107,13 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
+                            //FBD
+                            firebase_test fbt = new firebase_test();
+                            fbt.addData(mEmailView.getText().toString());
+                            //FBD
                             Toast.makeText(RegisterActivity.this, "User created", Toast.LENGTH_SHORT).show();
                             intent = new Intent(RegisterActivity.this,LoginActivity.class);
+                            startActivity(intent);
                         }
                     }
                 });

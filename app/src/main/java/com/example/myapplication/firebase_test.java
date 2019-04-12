@@ -40,13 +40,14 @@ public class firebase_test extends AppCompatActivity {
         push.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addData();
+                String Name = name.getText().toString();
+                addData(Name);
             }
         });
     }
 
-    private void addData() {
-        String Name = name.getText().toString();
+    public void addData(String Name) {
+
         if(!TextUtils.isEmpty(Name)) {
             String id = dbr.push().getKey();
             passTofb ptf = new passTofb(id,Name);

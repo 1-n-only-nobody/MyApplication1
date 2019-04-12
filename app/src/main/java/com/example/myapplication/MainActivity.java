@@ -42,12 +42,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
                     return true;
                 case R.id.navigation_dashboard:
                     //mTextMessage.setText(R.string.title_dashboard);
-                    position = 2;
+                    position = 3;
                     viewPager.setCurrentItem(position);
                     return true;
                 case R.id.navigation_Profile:
                     //mTextMessage.setText(R.string.title_profile);
-                    position = 3;
+                    position = 2;
                     viewPager.setCurrentItem(position);
                     return true;
             }
@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //JAY logic
+        //JAY logic
         //mTextMessage = (TextView) findViewById(R.id.message);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         pagerAdapter = new SwipePagerAdapter(getSupportFragmentManager());
@@ -76,9 +77,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
                     navigation.setSelectedItemId(R.id.navigation_home);
                 if (i == 1)
                     navigation.setSelectedItemId(R.id.navigation_video);
-                if (i == 2)
-                    navigation.setSelectedItemId(R.id.navigation_dashboard);
                 if (i == 3)
+                    navigation.setSelectedItemId(R.id.navigation_dashboard);
+                if (i == 2)
                     navigation.setSelectedItemId(R.id.navigation_Profile);
                 System.out.println(i);
             }
@@ -120,11 +121,11 @@ class SwipePagerAdapter extends FragmentStatePagerAdapter {
                 VideoFragment videoFragment = new VideoFragment();
                 return videoFragment;
             case 2:
-                DashboardFragment dashboardFragment = new DashboardFragment();
-                return dashboardFragment;
-            case 3:
                 ProfileFragment profileFragment = new ProfileFragment();
                 return profileFragment;
+            case 3:
+                DashboardFragment dashboardFragment = new DashboardFragment();
+                return dashboardFragment;
         }
         return null;
 

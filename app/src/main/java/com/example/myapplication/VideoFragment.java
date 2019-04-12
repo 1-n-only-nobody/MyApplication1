@@ -83,6 +83,27 @@ public class VideoFragment extends Fragment {
 //
 //        }
         createDummyData();
+//        SectionDataModel dm = new SectionDataModel();
+//        dm.setHeaderTitle("Sports");
+//        ArrayList<SingleItemModel> singleItem = new ArrayList<SingleItemModel>();
+//        singleItem.add(new SingleItemModel("Item-1", "<iframe src=\"https://www.youtube.com/embed/wAgZVLk6J4M\" allowfullscreen></iframe>"));
+//        dm.setAllItemsInSection(singleItem);
+//        allSampleData.add(dm);
+//        dm.setHeaderTitle("Sports");
+//        ArrayList<SingleItemModel> singleItem1 = new ArrayList<SingleItemModel>();
+//        singleItem.add(new SingleItemModel("Item-1", "<iframe src=\"https://www.youtube.com/embed/wAgZVLk6J4M\" allowfullscreen></iframe>"));
+//        dm.setAllItemsInSection(singleItem1);
+//        allSampleData.add(dm);
+//        dm.setHeaderTitle("Sports");
+//        ArrayList<SingleItemModel> singleItem2 = new ArrayList<SingleItemModel>();
+//        singleItem.add(new SingleItemModel("Item-1", "<iframe src=\"https://www.youtube.com/embed/wAgZVLk6J4M\" allowfullscreen></iframe>"));
+//        dm.setAllItemsInSection(singleItem2);
+//        allSampleData.add(dm);
+//        dm.setHeaderTitle("Sports");
+//        ArrayList<SingleItemModel> singleItem3 = new ArrayList<SingleItemModel>();
+//        singleItem.add(new SingleItemModel("Item-1", "<iframe src=\"https://www.youtube.com/embed/wAgZVLk6J4M\" allowfullscreen></iframe>"));
+//        dm.setAllItemsInSection(singleItem3);
+//        allSampleData.add(dm);
         RecyclerView my_recycler_view = view2.findViewById(R.id.nest_rec_view);
         my_recycler_view.setHasFixedSize(true);
         RecyclerViewDataAdapter adapter = new RecyclerViewDataAdapter(context, allSampleData);
