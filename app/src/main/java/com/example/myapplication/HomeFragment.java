@@ -122,10 +122,10 @@ public class HomeFragment extends Fragment {
         View view1 = inflater.inflate(R.layout.fragment_home, container, false);
         final Context context = getActivity().getApplicationContext();
         String[] names;
-        //System.out.println("facts size : " + facts.length);
+
         names = facts;
-        System.out.println("facts size : " + names[0]);
-        int[] photos = {R.drawable.img_266351, R.drawable.img_266351, R.drawable.img_266351, R.drawable.img_266351};
+        //System.out.println("facts size : " + names[0]);
+        int[] photos = {R.drawable.welcome, R.drawable.amazing1, R.drawable.amazing1, R.drawable.amazing1};
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(context, names, photos);
         RecyclerView recyclerView = (RecyclerView) view1.findViewById(R.id.view_recycle1);
         RecyclerView.LayoutManager mlm = new LinearLayoutManager(context);
