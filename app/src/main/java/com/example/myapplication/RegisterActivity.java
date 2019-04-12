@@ -36,10 +36,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -68,19 +72,19 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     // UI references.
     private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+    private EditText mPasswordView,mNameView;
     private View mProgressView;
     private View mLoginFormView;
     FirebaseAuth fba;
     DatabaseReference dbr;
     Intent intent;
-
+    String new_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         FirebaseApp.initializeApp(this);
-        dbr = FirebaseDatabase.getInstance().getReference("Names");
+        dbr = FirebaseDatabase.getInstance().getReference("Users");
         fba = FirebaseAuth.getInstance();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.emailR);
@@ -97,6 +101,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 return false;
             }
         });
+        mNameView = findViewById(R.id.nameR);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_up_buttonR);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -108,8 +113,40 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             //FBD
-                            firebase_test fbt = new firebase_test();
-                            fbt.addData(mEmailView.getText().toString());
+                            if(!TextUtils.isEmpty(mEmailView.getText().toString()) && !TextUtils.isEmpty(mPasswordView.getText().toString())) {
+                                //String id = dbr.push().getKey();
+                                //passTofb ptf = new passTofb(id,mEmailView.getText().toString());
+                                //dbr.child(id).setValue(ptf);
+//                                dbr.addValueEventListener(new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                        new_id = String.valueOf(dataSnapshot.getChildrenCount() + 1);
+//                                        registerUserOnFb ruf = new registerUserOnFb(mNameView.getText().toString());
+//                                        dbr.child(new_id).setValue(ruf);
+//                                        Toast.makeText(RegisterActivity.this, "Data added!" + new_id, Toast.LENGTH_LONG).show();
+//                                    }
+//                                    @Override
+//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                    }
+//                                });
+                                dbr.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        new_id = String.valueOf(dataSnapshot.getChildrenCount() + 1);
+                                        registerUserOnFb ruf = new registerUserOnFb(mNameView.getText().toString());
+                                        dbr.child(new_id).setValue(ruf);
+                                        Toast.makeText(RegisterActivity.this, "Data added!" + new_id, Toast.LENGTH_LONG).show();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            else
+                                Toast.makeText(RegisterActivity.this, "Enter something....", Toast.LENGTH_SHORT).show();
                             //FBD
                             Toast.makeText(RegisterActivity.this, "User created", Toast.LENGTH_SHORT).show();
                             intent = new Intent(RegisterActivity.this,LoginActivity.class);

@@ -32,7 +32,7 @@ public class firebase_test extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase_test);
         FirebaseApp.initializeApp(this);
-        dbr = FirebaseDatabase.getInstance().getReference("Names");
+        dbr = FirebaseDatabase.getInstance().getReference("Videos");
         name = findViewById(R.id.name);
         push = findViewById(R.id.push);
         lv = findViewById(R.id.lv);
@@ -52,7 +52,7 @@ public class firebase_test extends AppCompatActivity {
             String id = dbr.push().getKey();
             passTofb ptf = new passTofb(id,Name);
             dbr.child(id).setValue(ptf);
-            Toast.makeText(this, "Name added!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Data added!", Toast.LENGTH_SHORT).show();
         }
         else
             Toast.makeText(this, "Enter something....", Toast.LENGTH_SHORT).show();
