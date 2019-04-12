@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +35,8 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
         SingleItemModel singleItem = itemsList.get(i);
 
-        holder.tvTitle.setText(singleItem.getName());
+        //holder.tvTitle.setText(singleItem.getName());
+        holder.itempage.loadData( singleItem.getUrl(), "text/html" , "utf-8" );
 
     }
 
@@ -44,16 +47,21 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
 
     public class SingleItemRowHolder extends RecyclerView.ViewHolder {
 
-        protected TextView tvTitle;
+        //protected TextView tvTitle;
 
-        protected ImageView itemImage;
+        protected WebView itempage;
 
 
         public SingleItemRowHolder(View view) {
             super(view);
 
-            this.tvTitle = view.findViewById(R.id.tvTitle);
-            this.itemImage = view.findViewById(R.id.itemImage);
+            //this.tvTitle = view.findViewById(R.id.tvTitle);
+            this.itempage = view.findViewById(R.id.webView1);
+            itempage.setWebViewClient(new WebViewClient());
+            itempage.getSettings().setJavaScriptEnabled(true);
+            itempage.getSettings().setAllowFileAccess(true);
+            itempage.getSettings().setAllowFileAccessFromFileURLs(true);
+            itempage.getSettings().setAppCacheEnabled(true);
 
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +69,7 @@ public class SectionListDataAdapter extends RecyclerView.Adapter<SectionListData
                 public void onClick(View v) {
 
 
-                    Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(v.getContext(), tvTitle.getText(), Toast.LENGTH_SHORT).show();
 
                 }
             });

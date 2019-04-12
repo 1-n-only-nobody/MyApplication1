@@ -96,8 +96,8 @@ public class VideoFragment extends Fragment {
             SectionDataModel dm = new SectionDataModel();
             dm.setHeaderTitle("Section " + i);
             ArrayList<SingleItemModel> singleItem = new ArrayList<SingleItemModel>();
-            for (int j = 0; j <= 5; j++) {
-                singleItem.add(new SingleItemModel("Item " + j, "URL " + j));
+            for (int j = 0; j <= 2; j++) {
+                singleItem.add(new SingleItemModel("Item " + j, "<iframe src=\"https://www.youtube.com/embed/wAgZVLk6J4M\" allowfullscreen></iframe>"));
             }
             dm.setAllItemsInSection(singleItem);
             allSampleData.add(dm);
