@@ -5,6 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -28,20 +31,31 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+    private static final int PICK_IMAGE_REQUEST = 1;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -73,12 +88,18 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView,mNameView;
+    private ImageView mImageView;
     private View mProgressView;
     private View mLoginFormView;
     FirebaseAuth fba;
+    StorageReference mStorageRef;
     DatabaseReference dbr;
     Intent intent;
     String new_id;
+    private ImageView image;
+    private int array_position;
+    private ArrayList<String> pathArray;
+    Bitmap imgpath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +123,21 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         });
         mNameView = findViewById(R.id.nameR);
-
+        mImageView = findViewById(R.id.profPic);
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+//        checkFilePermissions();
+//        addFilePaths();
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Image logic
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                //Image logic
+            }
+        });
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_up_buttonR);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -114,29 +149,58 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                         if(task.isSuccessful()) {
                             //FBD
                             if(!TextUtils.isEmpty(mEmailView.getText().toString()) && !TextUtils.isEmpty(mPasswordView.getText().toString())) {
-                                //String id = dbr.push().getKey();
-                                //passTofb ptf = new passTofb(id,mEmailView.getText().toString());
-                                //dbr.child(id).setValue(ptf);
-//                                dbr.addValueEventListener(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                        new_id = String.valueOf(dataSnapshot.getChildrenCount() + 1);
-//                                        registerUserOnFb ruf = new registerUserOnFb(mNameView.getText().toString());
-//                                        dbr.child(new_id).setValue(ruf);
-//                                        Toast.makeText(RegisterActivity.this, "Data added!" + new_id, Toast.LENGTH_LONG).show();
-//                                    }
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                    }
-//                                });
                                 dbr.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         new_id = String.valueOf(dataSnapshot.getChildrenCount() + 1);
                                         registerUserOnFb ruf = new registerUserOnFb(mNameView.getText().toString());
                                         dbr.child(new_id).setValue(ruf);
+                                        //Image logic
+                                        File f = new File(String.valueOf(imgpath), "");
+                                        try {
+                                            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+                                        } catch (FileNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
+                                        //Image logic
+//                                        String imageName = ;
+                                        FirebaseUser user = fba.getCurrentUser();
+                                        String userID = user.getUid();
+                                        String name = "Death";
+//                                        if(!name.equals("")) {
+                                            Uri uri = Uri.fromFile(new File(pathArray.get(array_position)));
+                                            StorageReference storageReference = mStorageRef.child("images/users/" + userID + "/" + name + ".jpg");
+//                                            storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                                                @Override
+//                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                                    // Get a URL to the uploaded content
+//                                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+////                                                    toastMessage("Upload Success");
+////                                                    mProgressDialog.dismiss();
+//                                                }
+//                                            }).addOnFailureListener(new OnFailureListener() {
+//                                                @Override
+//                                                public void onFailure(@NonNull Exception e) {
+////                                                    toastMessage("Upload Failed");
+////                                                    mProgressDialog.dismiss();
+//                                                }
+                                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                // Got the download URL for 'users/me/profile.png' in uri
+                                                System.out.println(uri.toString());
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception exception) {
+                                                // Handle any errors
+                                            }
+                                            })
+                                            ;
+//                                        }
+                                        //Image logic
                                         Toast.makeText(RegisterActivity.this, "Data added!" + new_id, Toast.LENGTH_LONG).show();
+
                                     }
 
                                     @Override
@@ -159,6 +223,21 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
         mLoginFormView = findViewById(R.id.login_formR);
         mProgressView = findViewById(R.id.login_progressR);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri filePath = data.getData();
+            try {
+                //Getting the Bitmap from Gallery
+                imgpath= MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                //Setting the Bitmap to ImageView
+                mImageView.setImageBitmap(imgpath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void populateAutoComplete() {
@@ -203,7 +282,39 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         }
     }
-
+//    private void addFilePaths(){
+//        //Log.d(TAG, "addFilePaths: Adding file paths.");
+//        String path = System.getenv("EXTERNAL_STORAGE");
+//        pathArray.add(path+"/Pictures/Portal/image1.jpg");
+//        pathArray.add(path+"/Pictures/Portal/image2.jpg");
+//        pathArray.add(path+"/Pictures/Portal/image3.jpg");
+//        loadImageFromStorage();
+//    }
+//
+//    private void loadImageFromStorage()
+//    {
+//        try{
+//            String path = pathArray.get(array_position);
+//            File f=new File(path, "");
+//            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+//            image.setImageBitmap(b);
+//        }catch (FileNotFoundException e){
+//            //Log.e(TAG, "loadImageFromStorage: FileNotFoundException: " + e.getMessage() );
+//        }
+//
+//    }
+//
+//    private void checkFilePermissions() {
+//        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+//            int permissionCheck = RegisterActivity.this.checkSelfPermission("Manifest.permission.READ_EXTERNAL_STORAGE");
+//            permissionCheck += RegisterActivity.this.checkSelfPermission("Manifest.permission.WRITE_EXTERNAL_STORAGE");
+//            if (permissionCheck != 0) {
+//                this.requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1001); //Any number
+//            }
+//        }else{
+//            //Log.d(TAG, "checkBTPermissions: No need to check permissions. SDK version < LOLLIPOP.");
+//        }
+//    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
